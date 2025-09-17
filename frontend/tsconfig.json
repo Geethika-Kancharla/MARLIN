@@ -33,7 +33,7 @@
     "**/*.tsx",
     "next-env.d.ts",
     ".next/types/**/*.ts"
-  ],
+, "app/awareness/page.jsx"  ],
   "exclude": [
     "node_modules",
     ".next"
