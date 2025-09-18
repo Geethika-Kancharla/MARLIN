@@ -48,27 +48,33 @@ export default function AwarenessPage() {
   const cards = [
     {
       title: "Ocean Oxygen Provider",
-      content: "Over half of the world's oxygen is produced by oceanic phytoplankton.",
+      content:
+        "Over half of the world's oxygen is produced by oceanic phytoplankton.",
     },
     {
       title: "Climate Regulator",
-      content: "Oceans absorb carbon dioxide, helping to mitigate climate change.",
+      content:
+        "Oceans absorb carbon dioxide, helping to mitigate climate change.",
     },
     {
       title: "Marine Biodiversity",
-      content: "Millions of species, including fish, mammals, and corals, thrive in marine ecosystems.",
+      content:
+        "Millions of species, including fish, mammals, and corals, thrive in marine ecosystems.",
     },
     {
       title: "Plastic Pollution",
-      content: "Reduce plastic waste to prevent harmful effects on marine life.",
+      content:
+        "Reduce plastic waste to prevent harmful effects on marine life.",
     },
     {
       title: "Coral Reef Conservation",
-      content: "Protect coral reefs which provide habitat and shield coastlines from storms.",
+      content:
+        "Protect coral reefs which provide habitat and shield coastlines from storms.",
     },
     {
       title: "Sustainable Fishing",
-      content: "Support sustainable fishing practices to keep fish populations healthy.",
+      content:
+        "Support sustainable fishing practices to keep fish populations healthy.",
     },
   ];
 
@@ -76,11 +82,12 @@ export default function AwarenessPage() {
     <>
       <Navbar />
       <div className="relative w-full h-screen bg-gradient-to-b from-cyan-100 to-blue-600 overflow-hidden flex flex-col items-center">
-        
         {/* Responsive Heading */}
-        <h1 className="z-10 mt-6 mb-6 px-4 text-center font-extrabold text-white drop-shadow-lg tracking-wide
-                       text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
-          🌊 Marine Awareness
+        <h1
+          className="z-10 mt-6 mb-6 px-4 text-center font-extrabold text-white drop-shadow-lg tracking-wide
+                       text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+        >
+          Marine Awareness
         </h1>
 
         {/* Content Grid that fills screen height */}
@@ -93,23 +100,31 @@ export default function AwarenessPage() {
               <h2 className="text-xl sm:text-2xl font-semibold text-blue-800 mb-2">
                 {card.title}
               </h2>
-              <p className="text-base sm:text-lg text-blue-700">{card.content}</p>
+              <p className="text-base sm:text-lg text-blue-700">
+                {card.content}
+              </p>
             </div>
           ))}
         </main>
 
         {/* Wave at bottom */}
         <Wave
-          fill="#0288D1"
+          fill="#01579B"
           paused={false}
           className="absolute bottom-0 left-0 w-full h-20 z-0"
           options={{
             height: 20,
             amplitude: 15,
-            speed: 0.2,
-            points: 4,
+            speed: 0.18,
+            points: 5,
           }}
         />
+        <footer className="absolute bottom-0 w-full text-center pb-2">
+          <p className="text-white/80 text-sm sm:text-base bg-black/30 px-4 py-2 rounded-md inline-block">
+            © {new Date().getFullYear()} CMLRE Marine Intelligence Platform. All
+            Rights Reserved.
+          </p>
+        </footer>
 
         {/* Fish Layer */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-20">
