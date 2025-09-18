@@ -5,8 +5,8 @@ import Wave from "react-wavify";
 
 export default function AwarenessPage() {
   const [fishes, setFishes] = useState([]);
-
   const fishCount = 10; // Number of fishes on screen
+  const animationRef = useRef();
 
   // Initialize fishes
   useEffect(() => {
@@ -20,8 +20,6 @@ export default function AwarenessPage() {
     }));
     setFishes(newFishes);
   }, []);
-
-  const animationRef = useRef();
 
   // Animate fishes
   useEffect(() => {
@@ -77,21 +75,25 @@ export default function AwarenessPage() {
   return (
     <>
       <Navbar />
-      <div className="relative w-full min-h-screen bg-gradient-to-b from-cyan-100 to-blue-600 overflow-hidden flex flex-col items-center">
+      <div className="relative w-full h-screen bg-gradient-to-b from-cyan-100 to-blue-600 overflow-hidden flex flex-col items-center">
+        
         {/* Responsive Heading */}
-        <h1 className="z-10 mt-8 mb-8 w-full px-2 text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center drop-shadow">
-          Marine Awareness Page
+        <h1 className="z-10 mt-6 mb-6 px-4 text-center font-extrabold text-white drop-shadow-lg tracking-wide
+                       text-3xl sm:text-4xl md:text-5xl lg:text-6xl">
+          🌊 Marine Awareness
         </h1>
 
-        {/* Content Cards */}
-        <main className="z-10 w-full flex flex-col items-center gap-6 px-2 pb-28 sm:flex-row sm:flex-wrap sm:justify-center">
+        {/* Content Grid that fills screen height */}
+        <main className="z-10 flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6 pb-20 place-items-center">
           {cards.map((card, i) => (
             <div
               key={i}
-              className="bg-white bg-opacity-90 rounded-lg shadow-lg p-6 flex flex-col w-full max-w-xs sm:w-80"
+              className="bg-white bg-opacity-90 rounded-xl shadow-lg p-6 w-full max-w-sm text-center hover:scale-105 transform transition"
             >
-              <h2 className="text-xl sm:text-2xl font-semibold mb-2">{card.title}</h2>
-              <p className="text-base sm:text-lg">{card.content}</p>
+              <h2 className="text-xl sm:text-2xl font-semibold text-blue-800 mb-2">
+                {card.title}
+              </h2>
+              <p className="text-base sm:text-lg text-blue-700">{card.content}</p>
             </div>
           ))}
         </main>
@@ -100,7 +102,7 @@ export default function AwarenessPage() {
         <Wave
           fill="#0288D1"
           paused={false}
-          className="absolute bottom-0 left-0 w-full h-24 z-0"
+          className="absolute bottom-0 left-0 w-full h-20 z-0"
           options={{
             height: 20,
             amplitude: 15,
