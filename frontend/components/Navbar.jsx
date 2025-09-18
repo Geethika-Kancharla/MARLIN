@@ -16,7 +16,9 @@ export default function Navbar() {
         <ul className="hidden md:flex space-x-8 text-lg">
           <li><Link href="/" className="hover:text-cyan-300">Dashboard</Link></li>
           <li><Link href="/awareness" className="hover:text-cyan-300">Awareness</Link></li>
+          <li><Link href="/chat_interface" >Ask Questions</Link></li>
           <li><Link href="/about" className="hover:text-cyan-300">About</Link></li>
+          
         </ul>
 
         {/* Mobile Menu Button */}
@@ -40,7 +42,9 @@ export default function Navbar() {
         <ul className="md:hidden px-4 pb-4 space-y-3 bg-gradient-to-r from-blue-700 to-blue-500 text-white">
           <li><Link href="/" onClick={() => setMenuOpen(false)}>Dashboard</Link></li>
           <li><Link href="/awareness" onClick={() => setMenuOpen(false)}>Awareness</Link></li>
+          <li><Link href="/chat_interface" onClick={() => setMenuOpen(false)}>Ask Questions</Link></li>
           <li><Link href="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
+
         </ul>
       )}
     </nav>

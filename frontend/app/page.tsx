@@ -1,7 +1,7 @@
 "use client";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
-import Search from "../components/Search"; // Import the Search component
+//import Search from "../components/Search"; // Import the Search component
 
 export default function LandingPage() {
   const [showChatbot, setShowChatbot] = useState(false);
@@ -19,9 +19,12 @@ export default function LandingPage() {
             Harness technology and data to protect the marine ecosystem for
             future generations.
           </p>
-          <button className="bg-blue-700 text-white py-3 px-8 rounded-full font-semibold shadow-lg hover:bg-blue-800 active:scale-95 transition mb-2">
-            Explore Data
-          </button>
+            <button
+            className="bg-blue-700 text-white py-3 px-8 rounded-full font-semibold shadow-lg hover:bg-blue-800 active:scale-95 transition mb-2"
+            onClick={() => (window.location.href = "/chat_interface")}
+            >
+            Have Questions
+            </button>
         </section>
 
         {/* FEATURES */}
