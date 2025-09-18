@@ -1,127 +1,307 @@
 "use client";
 import Navbar from "../components/Navbar";
 import { useState } from "react";
-//import Search from "../components/Search"; // Import the Search component
+import {
+  LineChart, Line, BarChart, Bar,
+  XAxis, YAxis, Tooltip, CartesianGrid,
+  PieChart, Pie, Cell, Legend, ResponsiveContainer
+} from "recharts";
+import { MapContainer, TileLayer, CircleMarker, Tooltip as LeafletTooltip } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+
+type TemperatureData = { day: string; temp: number };
+type ChlorophyllData = { zone: string; value: number };
+type SalinityData = { name: string; value: number };
+type WaveHeightData = { time: string; height: number };
+type FishDistributionData = { species: string; value: number };
+type FishTypesData = { type: string; count: number };
+type FishHotspotData = { lat: number; lng: number; density: number };
+
+type OceanData = {
+  temperature: TemperatureData[];
+  chlorophyll: ChlorophyllData[];
+  salinity: SalinityData[];
+  waveHeight: WaveHeightData[];
+  fishDistribution: FishDistributionData[];
+  fishTypes: FishTypesData[];
+  fishHotspots: FishHotspotData[];
+};
+
+type Oceans = {
+  arabian: OceanData;
+  bay: OceanData;
+  indian: OceanData;
+};
 
 export default function LandingPage() {
-  const [showChatbot, setShowChatbot] = useState(false);
+  // 🌊 Ocean Data
+  const oceans: Oceans = {
+    arabian: {
+      temperature: [
+        { day: "Mon", temp: 27 },
+        { day: "Tue", temp: 28 },
+        { day: "Wed", temp: 29 },
+        { day: "Thu", temp: 30 },
+        { day: "Fri", temp: 31 },
+      ],
+      chlorophyll: [{ zone: "Arabian Sea", value: 2.1 }],
+      salinity: [
+        { name: "Normal", value: 60 },
+        { name: "Low", value: 25 },
+        { name: "High", value: 15 },
+      ],
+      waveHeight: [
+        { time: "6AM", height: 1.2 },
+        { time: "12PM", height: 1.8 },
+        { time: "6PM", height: 1.5 },
+      ],
+      fishDistribution: [
+        { species: "Tuna", value: 45 },
+        { species: "Mackerel", value: 30 },
+        { species: "Sardine", value: 25 },
+      ],
+      fishTypes: [
+        { type: "Pelagic", count: 120 },
+        { type: "Demersal", count: 80 },
+        { type: "Reef Fish", count: 60 },
+      ],
+      fishHotspots: [
+        { lat: 15.3, lng: 72.5, density: 300 }, // off Goa
+        { lat: 18.9, lng: 72.8, density: 450 }, // Mumbai coast
+        { lat: 9.9, lng: 75.3, density: 500 },  // Kochi
+      ]
+    },
+    bay: {
+      temperature: [
+        { day: "Mon", temp: 26 },
+        { day: "Tue", temp: 27 },
+        { day: "Wed", temp: 28 },
+        { day: "Thu", temp: 27 },
+        { day: "Fri", temp: 29 },
+      ],
+      chlorophyll: [{ zone: "Bay of Bengal", value: 1.7 }],
+      salinity: [
+        { name: "Normal", value: 70 },
+        { name: "Low", value: 20 },
+        { name: "High", value: 10 },
+      ],
+      waveHeight: [
+        { time: "6AM", height: 1.4 },
+        { time: "12PM", height: 1.9 },
+        { time: "6PM", height: 1.3 },
+      ],
+      fishDistribution: [
+        { species: "Hilsa", value: 50 },
+        { species: "Shrimp", value: 30 },
+        { species: "Pomfret", value: 20 },
+      ],
+      fishTypes: [
+        { type: "Estuarine", count: 140 },
+        { type: "Deep Sea", count: 60 },
+        { type: "Reef Fish", count: 40 },
+      ],
+      fishHotspots: [
+        { lat: 21.9, lng: 89.1, density: 400 }, // Sundarbans
+        { lat: 17.7, lng: 83.3, density: 350 }, // Vizag
+        { lat: 13.1, lng: 80.3, density: 420 }, // Chennai
+      ]
+    },
+    indian: {
+      temperature: [
+        { day: "Mon", temp: 28 },
+        { day: "Tue", temp: 29 },
+        { day: "Wed", temp: 30 },
+        { day: "Thu", temp: 31 },
+        { day: "Fri", temp: 32 },
+      ],
+      chlorophyll: [{ zone: "Indian Ocean", value: 2.8 }],
+      salinity: [
+        { name: "Normal", value: 65 },
+        { name: "Low", value: 15 },
+        { name: "High", value: 20 },
+      ],
+      waveHeight: [
+        { time: "6AM", height: 1.5 },
+        { time: "12PM", height: 2.0 },
+        { time: "6PM", height: 1.7 },
+      ],
+      fishDistribution: [
+        { species: "Yellowfin Tuna", value: 40 },
+        { species: "Swordfish", value: 35 },
+        { species: "Sharks", value: 25 },
+      ],
+      fishTypes: [
+        { type: "Deep Sea", count: 150 },
+        { type: "Pelagic", count: 90 },
+        { type: "Reef Fish", count: 50 },
+      ],
+      fishHotspots: [
+        { lat: -5.0, lng: 77.0, density: 300 }, // Lakshadweep
+        { lat: -1.5, lng: 73.0, density: 350 }, // Maldives area
+        { lat: 0.5, lng: 78.0, density: 400 },  // Equatorial IO
+      ]
+    }
+  };
+
+  const COLORS = ["#0288D1", "#26C6DA", "#FF7043", "#66BB6A"];
+  // Restrict selectedOcean to keys of oceans object
+  const [selectedOcean, setSelectedOcean] = useState<keyof Oceans>("arabian");
+  const currentData = oceans[selectedOcean];
 
   return (
     <>
       <Navbar />
-      <div className="relative min-h-screen w-full bg-gradient-to-b from-cyan-100 via-blue-200 to-blue-700 flex flex-col">
-        {/* HERO Section */}
-        <section className="pt-28 pb-16 flex flex-col items-center text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-blue-900 mb-4 drop-shadow">
-            Empowering Ocean Awareness
-          </h1>
-          <p className="text-lg sm:text-xl text-blue-800 mb-6 max-w-2xl bg-white bg-opacity-40 rounded-lg px-6 py-3 shadow-md">
-            Harness technology and data to protect the marine ecosystem for
-            future generations.
-          </p>
-            <button
-            className="bg-blue-700 text-white py-3 px-8 rounded-full font-semibold shadow-lg hover:bg-blue-800 active:scale-95 transition mb-2"
-            onClick={() => (window.location.href = "/chat_interface")}
-            >
-            Have Questions
-            </button>
+      <div className="min-h-screen w-full bg-gradient-to-b from-blue-50 via-cyan-100 to-blue-300 flex flex-col">
+
+        {/* 🌍 Dropdown */}
+        <section className="flex justify-center mt-20 mb-10">
+          <select
+            value={selectedOcean}
+            onChange={(e) => setSelectedOcean(e.target.value as keyof Oceans)}
+            className="px-8 py-3 rounded-2xl shadow-lg border border-blue-400 text-blue-900 font-semibold bg-white hover:bg-blue-50 transition duration-300 ease-in-out"
+          >
+            <option value="arabian">Arabian Sea</option>
+            <option value="bay">Bay of Bengal</option>
+            <option value="indian">Indian Ocean</option>
+          </select>
         </section>
 
-        {/* FEATURES */}
-        <section className="py-12 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+        {/* 📊 Graphs */}
+        <section className="py-8 px-4 w-full max-w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+          {/* Cards */}
           {[
             {
-              icon: "🌐",
-              title: "Real-time Data",
-              desc: "View current marine parameters and trends from trusted sources.",
-              action: () => {},
+              title: "Sea Surface Temp (°C)",
+              chart: (
+                <LineChart data={currentData.temperature}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="temp" stroke="#0288D1" strokeWidth={3} />
+                </LineChart>
+              )
             },
             {
-              icon: "🧠",
-              title: "AI Insights",
-              desc: "Chat with AI or upload images for intelligent analysis.",
-              action: () => setShowChatbot(true),
+              title: "Chlorophyll (mg/m³)",
+              chart: (
+                <BarChart data={currentData.chlorophyll}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="zone" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#26C6DA" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              )
             },
             {
-              icon: "📚",
-              title: "Educational Resources",
-              desc: "Learn about ocean ecosystems and actions for stewardship.",
-              action: () => {},
+              title: "Salinity Levels",
+              chart: (
+                <PieChart>
+                  <Pie
+                    data={currentData.salinity}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={70}
+                    dataKey="value"
+                    label
+                  >
+                    {currentData.salinity.map((entry: SalinityData, index: number) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Legend />
+                  <Tooltip />
+                </PieChart>
+              )
             },
             {
-              icon: "🤝",
-              title: "Community Contribution",
-              desc: "Join advocates and share your findings with others.",
-              action: () => {},
+              title: "Wave Height (m)",
+              chart: (
+                <LineChart data={currentData.waveHeight}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="time" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="height" stroke="#FF7043" strokeWidth={3} />
+                </LineChart>
+              )
             },
-          ].map((f, i) => (
+            {
+              title: "Fish Distribution (%)",
+              chart: (
+                <PieChart>
+                  <Pie
+                    data={currentData.fishDistribution}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={70}
+                    dataKey="value"
+                    label
+                  >
+                    {currentData.fishDistribution.map((entry: FishDistributionData, index: number) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Legend />
+                  <Tooltip />
+                </PieChart>
+              )
+            },
+            {
+              title: "Types of Fish (Count)",
+              chart: (
+                <BarChart data={currentData.fishTypes}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="type" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="count" fill="#66BB6A" radius={[8, 8, 0, 0]} />
+                </BarChart>
+              )
+            }
+          ].map(({ title, chart }, index) => (
             <div
-              key={i}
-              className="flex flex-col items-center bg-white bg-opacity-90 rounded-lg shadow-lg p-6 cursor-pointer hover:scale-105 transition"
-              onClick={f.action}
+              key={index}
+              className="bg-white rounded-3xl shadow-lg p-6 hover:shadow-2xl transition-shadow duration-300 ease-in-out flex flex-col w-full"
             >
-              <div className="text-4xl mb-2">{f.icon}</div>
-              <h3 className="text-xl font-semibold text-blue-800 mb-1">
-                {f.title}
-              </h3>
-              <p className="text-blue-700 text-center">{f.desc}</p>
+              <h3 className="text-xl font-semibold text-blue-900 mb-4">{title}</h3>
+              <ResponsiveContainer width="100%" height={220}>
+                {chart}
+              </ResponsiveContainer>
             </div>
           ))}
-        </section>
 
-        {/* IMPACT / STATS */}
-        <section className="py-8 px-4 flex flex-wrap justify-center gap-8 max-w-4xl mx-auto">
-          {[
-            { stat: "60%+", label: "Earth's Oxygen from Oceans" },
-            { stat: "20K+", label: "Marine Species Tracked" },
-            { stat: "1M+", label: "Data Points Visualized" },
-            { stat: "∞", label: "Actions for Conservation" },
-          ].map((s, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center bg-gradient-to-br from-blue-400 to-cyan-300 rounded-xl shadow-lg p-6 w-40"
+          {/* 🗺️ Fish Population Map */}
+          <div className="bg-white rounded-3xl shadow-lg p-6 col-span-1 md:col-span-2 lg:col-span-2 xl:col-span-3 w-full">
+            <h3 className="text-xl font-semibold text-blue-900 mb-4">Fish Population Hotspots</h3>
+            <MapContainer
+              center={[15, 75]}
+              zoom={4}
+              className="h-96 w-full rounded-3xl shadow-md"
+              scrollWheelZoom={false}
             >
-              <span className="text-3xl font-bold text-white drop-shadow">
-                {s.stat}
-              </span>
-              <span className="text-md text-white">{s.label}</span>
-            </div>
-          ))}
+              <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              {currentData.fishHotspots.map((spot: FishHotspotData, i: number) => (
+                <CircleMarker
+                  key={i}
+                  center={[spot.lat, spot.lng]}
+                  radius={Math.sqrt(spot.density) / 2}
+                  color="#0288D1"
+                  fillColor="#26C6DA"
+                  fillOpacity={0.6}
+                >
+                  <LeafletTooltip>{`Density: ${spot.density}`}</LeafletTooltip>
+                </CircleMarker>
+              ))}
+            </MapContainer>
+          </div>
         </section>
 
         {/* Footer */}
-        <footer className="mt-auto w-full py-8 bg-blue-800 bg-opacity-95 text-white text-center text-sm">
-          <div>
-            CMLRE Marine Data • Protecting Our Seas • Connect | Docs | Contact
-          </div>
-          <div className="mt-2">© 2025 Marine Awareness Project</div>
+        <footer className="mt-auto w-full py-6 bg-blue-900 text-white text-center text-sm shadow-inner">
+          © 2025 Marine Awareness Project • Demo Visualization
         </footer>
-
-        {/* Chatbot Modal */}
-        {showChatbot && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6 relative">
-              <button
-                onClick={() => setShowChatbot(false)}
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-              >
-                ✖
-              </button>
-              <h2 className="text-xl font-bold mb-4 text-blue-700">
-                AI Ocean Insights
-              </h2>
-              <textarea
-                className="w-full border rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                rows={4}
-                placeholder="Ask me anything about oceans..."
-              />
-              <input type="file" className="mb-4" />
-              <button className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800">
-                Send
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );
