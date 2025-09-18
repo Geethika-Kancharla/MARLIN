@@ -16,7 +16,6 @@ export default function Navbar() {
         <ul className="hidden md:flex space-x-8 text-lg">
           <li><Link href="/" className="hover:text-cyan-300">Dashboard</Link></li>
           <li><Link href="/awareness" className="hover:text-cyan-300">Awareness</Link></li>
-          <li><Link href="/dataapi" className="hover:text-cyan-300">Data API</Link></li>
           <li><Link href="/about" className="hover:text-cyan-300">About</Link></li>
         </ul>
 
@@ -41,7 +40,6 @@ export default function Navbar() {
         <ul className="md:hidden px-4 pb-4 space-y-3 bg-gradient-to-r from-blue-700 to-blue-500 text-white">
           <li><Link href="/" onClick={() => setMenuOpen(false)}>Dashboard</Link></li>
           <li><Link href="/awareness" onClick={() => setMenuOpen(false)}>Awareness</Link></li>
-          <li><Link href="/dataapi" onClick={() => setMenuOpen(false)}>Data API</Link></li>
           <li><Link href="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
         </ul>
       )}
