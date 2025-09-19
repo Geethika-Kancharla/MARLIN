@@ -15,8 +15,9 @@ export default function Navbar() {
         {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-8 text-lg">
           <li><Link href="/" className="hover:text-cyan-300">Dashboard</Link></li>
-          <li><Link href="/awareness" className="hover:text-cyan-300">Awareness</Link></li>
+          <li><Link href="/analysis" className="hover:text-cyan-300">Analysis</Link></li>
           <li><Link href="/chat_interface" >Ask Questions</Link></li>
+          <li><Link href="/awareness" className="hover:text-cyan-300">Awareness</Link></li>
           <li><Link href="/about" className="hover:text-cyan-300">About</Link></li>
           
         </ul>
